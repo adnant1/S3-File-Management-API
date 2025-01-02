@@ -69,13 +69,13 @@ def upload_file():
 #Retrieve file names and URLs from S3
 @app.route('/files', methods=['GET'])
 def list_files():
-    #Fill in
+    #Fill in code
     pass 
 
 #Delete a file from S3
 @app.route('/files/<filename>', methods=['DELETE'])  
 def delete_file(filename):
-    #Fill in
+    #Fill in code
     pass 
 
 
