@@ -30,7 +30,7 @@ def allowed_file(filename):
 
 #Routes
 
-#Validate and upload a file to S3
+#Validate and upload a file to the S3 bucket
 @app.route('/upload', methods=['POST'])
 def upload_file():
     
@@ -71,7 +71,7 @@ def upload_file():
             return jsonify({'error code': error_code, 'message': error_message})
 
 
-#Retrieve file names from S3
+#Retrieve all the file inside the S3 bucket
 @app.route('/files', methods=['GET'])
 def list_files():
 
@@ -92,14 +92,18 @@ def list_files():
         #creates a url to access the file for a limited amount of time
         url = s3.meta.client.generate_presigned_url('get_object', Params = {'Bucket': BUCKET_NAME, 'Key': key}, ExpiresIn=60)
 
-        #add key and url to the dict
-        file_dict[key] = url
+        #add key and its metadata to the dict
+        file_dict[key] = {
+            'url': url,
+            'size': str(file.size / 1024) + ' KB',
+            'type': key.rsplit('.', 1)[1].lower()
+        }
  
     
     return jsonify(file_dict)
 
 
-#Delete a file from S3
+#Delete a file from the S3 bucket
 @app.route('/files/<filekey>', methods=['DELETE'])  
 def delete_file(filekey):
 
